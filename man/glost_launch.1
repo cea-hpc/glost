@@ -1,0 +1,113 @@
+.\"
+.\" Man page for glost_launch command
+.\" 
+.\" .TH name     section center-footer   left-footer  center-header
+.TH GLOST_LAUNCH 1 "Jul 19 2012" "0.2" "GLOST"
+.\" **************************
+.\"    Name Section
+.\" **************************
+.SH NAME
+.
+glost_launch \- Greedy launcher Of Small Tasks.
+
+.
+.\" **************************
+.\"    Synopsis Section
+.\" **************************
+.SH SYNOPSIS
+.
+.PP
+
+[
+.B <mpirun>
+[mpi_option]... 
+]
+.B glost_launch
+.B [option]
+.B <task_file>
+.P
+
+Where <mpirun>, is your MPI launcher,
+[mpi_options] is your MPI option.
+
+<task_file> is the file containing the independent tasks,
+one task per line.
+.
+.
+.\" **************************
+.\"    Option Section
+.\" **************************
+.SH OPTION
+.
+.TP
+\fB\-R\fR, \fB\-\-time_remaining[=]\fR\fItime\fR
+  stop submit new tasks if the time remaining for the job is inferior to \fItime\fR.
+  It is only available if you have compiled it with libccc_user. (\fB-D __HAVE_LIBCCC_USER__\fR)
+.
+.
+.\" **************************
+.\"    Description Section
+.\" **************************
+.SH DESCRIPTION
+.
+\fIglost_launch\fP try to execute simultaneously "number of MPI processes -1" lines of <glost_file> in parrallel.
+
+This will help you launching a maximum of independent tasks,
+with variable execution time under the limitations of your cluster batch sheduler.
+
+.
+.SS Algorithm
+.
+One invocation of \fIglost_launch\fP starts an MPI job. 
+Process 0 is called master, while the others, slaves.
+
+The master reads the next task, waits for
+a free slave, and sends the task to the free slave.
+
+Meanwhile, each slave says that he is free to the master,
+waits for the task, and executes it.
+
+If \fIglost_launch\fP is launched in sequential, the master 
+reads and executes himself each task. 
+.
+.SS Outputs
+.
+Each task is executed with \fBsystem(3)\fP, timed, and its status is logged on stderr,
+using the following format :
+
+.B
+#executed by process <rank> in <time>s with status <status> : <task>
+.P
+
+.
+.SS Ending glost_launch during execution.
+.
+
+Instead of using the traditional SIGQUIT, use SIGUSR1 to kill glost_launch properly (to make glost_launch stop launching new commands.
+
+Unfortunately, we cannot use the traditional SIGQUIT because OpenMPI filters the signal.
+For an example, see example/test_sigusr1.sh 
+
+.
+.SS Process Environment
+.
+The task launched inherits their environment from the user's shell.
+
+Thus user may use exported variables in the \fB<task_file>\fP file.
+We do advise using them for paths.
+.
+.SS Failures
+.
+If \fIglost_launch\fP is killed, it should kill every slave.
+
+If a task fails, its returned code is showed in <status> in the outputs.
+The user may use \fIglost_filter\fP to extracts from a logged stderr,
+which task was run, which one are remainings, etc. ...
+
+.
+.\" **************************
+.\"    See Also Section
+.\" **************************
+.
+.SH SEE ALSO
+glost_filter.sh -h

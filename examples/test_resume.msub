@@ -1,0 +1,22 @@
+#!/bin/bash
+#MSUB -n 4
+#MSUB -q standard
+#MSUB -Q test
+#MSUB -T 90
+
+#
+# Example of a job who can continues a previous execution.
+# 
+
+ifile=test_resume.list
+ofile=test_resume.log
+
+if [ -f $ofile ]; then
+    [ $SLURM_JOBID ] && nifile=$ifile.$SLURM_JOBID || nifile=`mktemp ${ifile}.XXX`
+    echo "logfile $ofile found: Generating the new input file $nifile"
+    ../glost_filter.sh -s 0 -R $ifile $ofile >${nifile}
+    ifile=$nifile
+fi
+
+ccc_mprun ../glost_launch $ifile &>> $ofile
+

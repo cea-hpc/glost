@@ -1,0 +1,19 @@
+- fix compilation on titane
+
+== since 0.2.4 ==
+
+- fix the examples (due to the software rename)
+- add "-h" option in glost_launch
+
+== since 0.2.0 ==
+
+- rename the soft to "glost"
+- add feature: support of -R <time_remaining> option
+- add feature: support of signal SIGUSR1 to properly stop the glost_launch
+- Bugfix : output status matches the exit code of launched command
+- Bugfix : empty line in input file kills slave.
+- add example : example/test_resume.* , showing how a ccc_msub job which can resume
+- enhance the basic example and add new ones for each new feature.
+
+== since 0.1 ==
+- initial working version

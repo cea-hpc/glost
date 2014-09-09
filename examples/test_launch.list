@@ -1,0 +1,15 @@
+sleep 0.1
+sleep 0.2 # :first exec 
+sleep 0.3
+sleep 0.1
+exit 1
+kill $$
+sleep 0.6
+sleep 0.10
+
+sleep 0.2 # :second exec
+sleep 0.2 # :third exec
+sleep 0.2 # :4 exec
+sleep 0.1
+sleep 0.1
+sleep 0.11 # a

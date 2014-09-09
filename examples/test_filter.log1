@@ -1,0 +1,9 @@
+master is 0 , nb slaves: 8
+#executed by process	 3 in 0.109198s	with status	0 : sleep 0.1
+#executed by process	 6 in 0.10916s	with status	0 : sleep 0.10
+#executed by process	 8 in 0.207735s	with status	0 : sleep 0.2 # :third exec
+#executed by process	 7 in 0.207842s	with status	0 : sleep 0.2 # :second exec
+#executed by process	 2 in 0.307797s	with status	3 : sleep 0.3
+#executed by process	 3 in 0.203723s	with status	0 : sleep 0.2 # :4 exec
+#executed by process	 8 in 0.116954s	with status    10 : sleep 0.11 # a
+#executed by process	 5 in 0.607834s	with status	0 : sleep 0.6

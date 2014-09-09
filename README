@@ -1,0 +1,32 @@
+This is GLOST, the Greedy Launcher Of Small Tasks. 
+
+== Requirements ==
+
+MPI
+
+== Compil & Install ==
+
+edit the Makefile.
+$ make
+
+== Example ==
+
+see the scripts in directory examples/
+
+== Documentation ==
+
+
+* see ./glost_launch -h
+* see ./glost_filter.sh -h
+
+== Other ==
+
+If you want a new feature, please contact:
+
+bruno.froge@cea.fr
+
+In case of a bug, please contact us at:
+
+vincent.ducrot.tgcc@cea.fr
+yohan.lee-tin-yien.tgcc@cea.fr
+

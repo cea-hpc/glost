@@ -1,4 +1,13 @@
+- add option "--maxline_length" and its example
+- security fixe(s)
+- add example for glost_bcast
+
+== since 0.3.0 ==
+
+- add glost_bcast
+- fix segfault on no input file
 - fix compilation on titane
+- other code quality fixes
 
 == since 0.2.4 ==
 

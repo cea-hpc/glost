@@ -15,9 +15,9 @@ see the scripts in directory examples/
 
 == Documentation ==
 
-
 * see ./glost_launch -h
-* see ./glost_filter.sh -h
+* see ./glost_filter -h
+* see ./glost_bcast
 
 == Other ==
 

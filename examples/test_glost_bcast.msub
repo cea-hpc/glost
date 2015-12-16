@@ -1,0 +1,30 @@
+#!/bin/bash
+#MSUB -n 4
+#MSUB -c 8
+#MSUB -q standard
+#MSUB -Q test
+#MSUB -T 90
+
+#
+# Example of glost_bcast
+#
+
+ifile=test_resume.list
+ofile=test_resume.log
+
+# Generate 2 random files
+dd if=/dev/urandom of=random1.txt bs=64M count=1
+dd if=/dev/urandom of=random2.txt bs=2M count=1
+
+
+# Broadcast them
+ccc_mprun -n ${BRIDGE_MSUB_NNODE} -N ${BRIDGE_MSUB_NNODE} ../glost_bcast random1.txt random2.txt
+
+# Check them
+md5sum random1.txt > random.md5
+md5sum random2.txt >> random.md5
+sed -i "s:  :  /tmp/:g" random.md5
+ccc_mprun md5sum -c random.md5
+
+# Remove them
+ccc_mprun -n ${BRIDGE_MSUB_NNODE} -N ${BRIDGE_MSUB_NNODE} rm /tmp/random1.txt /tmp/random2.txt

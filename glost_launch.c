@@ -72,7 +72,7 @@ static int ccc_tremain(double *tremain)
  * main *
  ********/
 
-static int glost_no_new_task=0;
+static volatile int glost_no_new_task=0;
 
 
 int main(int argc,char **argv)
@@ -196,7 +196,11 @@ static void read_next_command(FILE *fl,char *tsk, double user_tremain, size_t le
     fprintf(stderr,"#time remaining = %g < %g : do not launch new tasks.\n",
 	    tremain,user_tremain);
 
-  if (glost_no_new_task) r = 1;   
+  if (glost_no_new_task) {
+      fprintf(stderr,"#signal received: no new task will be submitted\n");
+      r = 1;
+  }
+
   if (r) return;
 
   /* if(!fgets(tsk,GLOST_MAXLEN,fl)) tsk[0]='\0'; */
@@ -437,7 +441,6 @@ void set_sigaction()
 
 static void set_glost_no_new_task(int signum)
 {
-  fprintf(stderr,"#signal %i received: no new task will be submitted\n",signum);
   glost_no_new_task=1;
 }
 

@@ -20,7 +20,7 @@
 - add feature: support of -R <time_remaining> option
 - add feature: support of signal SIGUSR1 to properly stop the glost_launch
 - Bugfix : output status matches the exit code of launched command
-- Bugfix : empty line in input file kills slave.
+- Bugfix : empty line in input file kills worker.
 - add example : example/test_resume.* , showing how a ccc_msub job which can resume
 - enhance the basic example and add new ones for each new feature.
 

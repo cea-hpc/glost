@@ -45,7 +45,7 @@ static const char flavor[]="-tgcc";
 
 /* core functions */
 void read_and_exec(char *filename, double user_tremain, size_t len);
-void read_and_send(int slaves, char *filename, double user_tremain, size_t len);
+void read_and_send(int workers, char *filename, double user_tremain, size_t len);
 void recv_and_exec(int rank, size_t len);
 static void read_next_command(FILE *fl,char *tsk, double user_tremain, size_t len);
 static void exec_command(char *tsk, int rank);
@@ -102,7 +102,7 @@ int main(int argc,char **argv)
   MPI_Bcast(&maxstrlen,1,MPI_UINT64_T,0,MPI_COMM_WORLD);
 
   if (rank == GLOST_MANAGER) {
-    printf("manager is %d , nb slaves: %d\n", GLOST_MANAGER,size-1);	
+    printf("Manager is process %d, nb workers: %d\n", GLOST_MANAGER,size-1);
   }
   
   /* launch */
@@ -140,7 +140,7 @@ void read_and_exec(char *filename, double user_tremain, size_t len )
   fclose(fl);
 }
 
-void read_and_send(int slaves,char *filename, double user_tremain, size_t len)
+void read_and_send(int workers,char *filename, double user_tremain, size_t len)
 {
   int i, num;
   MPI_Status status;
@@ -163,7 +163,7 @@ void read_and_send(int slaves,char *filename, double user_tremain, size_t len)
 	     TAG_TSK,MPI_COMM_WORLD);
     if (!strlen(tsk)) /* terminate command sent */
       i++;
-  } while (i < slaves);
+  } while (i < workers);
   fclose(fl);
 }
 
@@ -361,12 +361,12 @@ void print_options(char *argv0){
   "  - Algorithm -\n"
   "\n"
   "One invocation of %s starts an MPI job.\n"
-  "Process 0 is called manager, while the others, slaves.\n"
+  "Process 0 is called manager, while the others, workers.\n"
   "\n"
   "The manager reads the next task, waits for \n"
-  "a free slave, and sends the task to the free slave. \n"
+  "a free worker, and sends the task to the free worker. \n"
   "\n"
-  "Meanwhile, each slave says that he is free to the manager, \n"
+  "Meanwhile, each worker says that he is free to the manager, \n"
   "waits for the task, and executes it. \n"
   "\n"
   "If %s is launched in sequential, the manager  \n"
@@ -410,7 +410,7 @@ void print_options(char *argv0){
   "\n"
   "  - Process Environment -\n"
   "\n"
-  "If %s is killed, it should kill every slave.   \n"
+  "If %s is killed, it should kill every worker.   \n"
   "\n"
   "If a task fails, its returned code is showed in <status> in the outputs.  \n"
   "The user may use glost_filter.sh to extracts from a logged stderr,  \n"

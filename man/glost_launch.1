@@ -59,12 +59,12 @@ with variable execution time under the limitations of your cluster batch shedule
 .SS Algorithm
 .
 One invocation of \fIglost_launch\fP starts an MPI job. 
-Process 0 is called manager, while the others, slaves.
+Process 0 is called manager, while the others, workers.
 
 The manager reads the next task, waits for
-a free slave, and sends the task to the free slave.
+a free worker, and sends the task to the free worker.
 
-Meanwhile, each slave says that he is free to the manager,
+Meanwhile, each worker says that he is free to the manager,
 waits for the task, and executes it.
 
 If \fIglost_launch\fP is launched in sequential, the manager 
@@ -98,7 +98,7 @@ We do advise using them for paths.
 .
 .SS Failures
 .
-If \fIglost_launch\fP is killed, it should kill every slave.
+If \fIglost_launch\fP is killed, it should kill every worker.
 
 If a task fails, its returned code is showed in <status> in the outputs.
 The user may use \fIglost_filter\fP to extracts from a logged stderr,

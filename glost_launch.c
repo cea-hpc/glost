@@ -39,7 +39,7 @@
 static const char flavor[]="-tgcc";
 
 #define GLOST_STRLEN 4096
-#define GLOST_MASTER 0
+#define GLOST_MANAGER 0
 #define TAG_AVAIL 1
 #define TAG_TSK   2
 
@@ -91,7 +91,7 @@ int main(int argc,char **argv)
   set_sigaction();
 
   /* read options */
-  if (rank == GLOST_MASTER)
+  if (rank == GLOST_MANAGER)
     tmp=read_options(argc,argv,&user_tremain,&maxstrlen);
   
   MPI_Bcast(&tmp,1,MPI_INT,0,MPI_COMM_WORLD);
@@ -101,14 +101,14 @@ int main(int argc,char **argv)
   }
   MPI_Bcast(&maxstrlen,1,MPI_UINT64_T,0,MPI_COMM_WORLD);
 
-  if (rank == GLOST_MASTER) {
-    printf("master is %d , nb slaves: %d\n", GLOST_MASTER,size-1);	
+  if (rank == GLOST_MANAGER) {
+    printf("manager is %d , nb slaves: %d\n", GLOST_MANAGER,size-1);	
   }
   
   /* launch */
   if (size == 1)
     read_and_exec(argv[optind],user_tremain,maxstrlen);
-  else if(size != 1 && rank == GLOST_MASTER)
+  else if(size != 1 && rank == GLOST_MANAGER)
     read_and_send(size-1,argv[optind],user_tremain,maxstrlen);
   else
     recv_and_exec(rank,maxstrlen);
@@ -135,7 +135,7 @@ void read_and_exec(char *filename, double user_tremain, size_t len )
     read_next_command(fl,tsk,user_tremain,len);
     if(!strlen(tsk))
       break;
-    exec_command(tsk,GLOST_MASTER);
+    exec_command(tsk,GLOST_MANAGER);
   } while (strlen(tsk));
   fclose(fl);
 }
@@ -173,9 +173,9 @@ void recv_and_exec(int rank,size_t len)
   MPI_Status status;  
 
   do {
-    MPI_Send(&rank,1,MPI_INT,GLOST_MASTER,
+    MPI_Send(&rank,1,MPI_INT,GLOST_MANAGER,
 	     TAG_AVAIL,MPI_COMM_WORLD); 
-    MPI_Recv(tsk,len,MPI_CHAR,GLOST_MASTER,
+    MPI_Recv(tsk,len,MPI_CHAR,GLOST_MANAGER,
 	     TAG_TSK,MPI_COMM_WORLD,&status); 
     if(!strlen(tsk)) /* terminate command */
       break;
@@ -361,15 +361,15 @@ void print_options(char *argv0){
   "  - Algorithm -\n"
   "\n"
   "One invocation of %s starts an MPI job.\n"
-  "Process 0 is called master, while the others, slaves.\n"
+  "Process 0 is called manager, while the others, slaves.\n"
   "\n"
-  "The master reads the next task, waits for \n"
+  "The manager reads the next task, waits for \n"
   "a free slave, and sends the task to the free slave. \n"
   "\n"
-  "Meanwhile, each slave says that he is free to the master, \n"
+  "Meanwhile, each slave says that he is free to the manager, \n"
   "waits for the task, and executes it. \n"
   "\n"
-  "If %s is launched in sequential, the master  \n"
+  "If %s is launched in sequential, the manager  \n"
   "reads and executes himself each task.  \n"
   "\n"
   ,argv0,argv0);

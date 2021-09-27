@@ -1,4 +1,4 @@
-master is 0 , nb slaves: 8
+manager is 0 , nb slaves: 8
 #executed by process	 3 in 0.109198s	with status	0 : sleep 0.1
 #executed by process	 6 in 0.10916s	with status	0 : sleep 0.10
 #executed by process	 8 in 0.207735s	with status	0 : sleep 0.2 # :third exec
